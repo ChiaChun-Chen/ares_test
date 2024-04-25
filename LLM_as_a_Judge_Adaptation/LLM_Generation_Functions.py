@@ -19,6 +19,10 @@ import math
 
 #################################################################
 
+MAX_LENGTH = 8192
+
+#################################################################
+
 def generate_synthetic_query_llm_approach(document: str, prompt: str, length_of_fewshot_prompt: int, device, tokenizer, model, percentiles, for_fever_dataset=False, for_wow_dataset=False):
 
     synthetic_queries = []
@@ -33,10 +37,10 @@ def generate_synthetic_query_llm_approach(document: str, prompt: str, length_of_
     prompt_tokens_length = tokenizer.encode(prompt_without_document, return_tensors='pt').to(device).shape[1]
     document_length = tokenizer.encode(document, return_tensors='pt').to(device).shape[1]
 
-    if prompt_tokens_length + document_length + 100 >= 2048:
+    if prompt_tokens_length + document_length + 100 >= MAX_LENGTH:
         # Added buffer for truncation
-        encoded_input = tokenizer(document, max_length=2048 - prompt_tokens_length - 100, truncation=True, return_tensors='pt')
-        truncated_document = tokenizer.decode(encoded_input['input_ids'][0][:2048 - prompt_tokens_length - 100]) 
+        encoded_input = tokenizer(document, max_length=MAX_LENGTH - prompt_tokens_length - 100, truncation=True, return_tensors='pt')
+        truncated_document = tokenizer.decode(encoded_input['input_ids'][0][:MAX_LENGTH - prompt_tokens_length - 100]) 
         document = truncated_document.replace("</s>", "")
 
     prompt += "Example " + str(length_of_fewshot_prompt + 1) +":\n"
@@ -48,15 +52,15 @@ def generate_synthetic_query_llm_approach(document: str, prompt: str, length_of_
     else:
         prompt += "Question: "
 
-    input_ids = tokenizer.encode(prompt, max_length=2048, truncation=True, return_tensors='pt').to(device)
+    input_ids = tokenizer.encode(prompt, max_length=MAX_LENGTH, truncation=True, return_tensors='pt').to(device)
 
-    max_length = 32
+    max_length = MAX_LENGTH
     if for_wow_dataset:
         max_length = 256
 
     for percentile in percentiles:
 
-        if input_ids.shape[0] != 1 or input_ids.shape[1] >= 2048:
+        if input_ids.shape[0] != 1 or input_ids.shape[1] >= MAX_LENGTH:
             print("Length of problematic input ids: " + str(input_ids.shape))
             print("Length of problematic document: " + str(len(encoded_input['input_ids'][0])))
             assert False
@@ -87,11 +91,11 @@ def generate_answer_llm_approach(document: str, question: str, prompt: str, leng
     document_length = tokenizer.encode(document, return_tensors='pt').to(device).shape[1]
     question_length = tokenizer.encode(question, return_tensors='pt').to(device).shape[1]
 
-    if prompt_tokens_length + document_length + question_length + 100 >= 2048:
+    if prompt_tokens_length + document_length + question_length + 100 >= MAX_LENGTH:
         # Added buffer for truncation
         reduction_length = prompt_tokens_length + question_length + 100
-        encoded_input = tokenizer(document, max_length=2048 - reduction_length, truncation=True, return_tensors='pt')
-        truncated_document = tokenizer.decode(encoded_input['input_ids'][0][:2048 - reduction_length]) 
+        encoded_input = tokenizer(document, max_length=MAX_LENGTH - reduction_length, truncation=True, return_tensors='pt')
+        truncated_document = tokenizer.decode(encoded_input['input_ids'][0][:MAX_LENGTH - reduction_length]) 
         document = truncated_document.replace("</s>", "")
 
     prompt += "Example " + str(length_of_fewshot_prompt + 1) +":\n"
@@ -106,15 +110,15 @@ def generate_answer_llm_approach(document: str, question: str, prompt: str, leng
         prompt += "Question: " + question + "\n"
         prompt += "Answer: " 
 
-    input_ids = tokenizer.encode(prompt, max_length=2048, truncation=True, return_tensors='pt').to(device)
+    input_ids = tokenizer.encode(prompt, max_length=MAX_LENGTH, truncation=True, return_tensors='pt').to(device)
 
-    if input_ids.shape[0] != 1 or input_ids.shape[1] >= 2048:
+    if input_ids.shape[0] != 1 or input_ids.shape[1] >= MAX_LENGTH:
         print("Length of problematic input ids: " + str(input_ids.shape))
         print("Length of problematic document: " + str(len(encoded_input['input_ids'][0])))
         assert False
     outputs = model.generate(
         input_ids=input_ids,
-        max_length=256,
+        max_length=MAX_LENGTH,
         do_sample=True,
         top_p=0.05,
         num_return_sequences=1)
@@ -352,11 +356,11 @@ def generate_contradictory_answer_llm_approach(document: str, question: str, pro
     document_length = tokenizer.encode(document, return_tensors='pt').to(device).shape[1]
     question_length = tokenizer.encode(question, return_tensors='pt').to(device).shape[1]
 
-    if prompt_tokens_length + document_length + question_length + 100 >= 2048:
+    if prompt_tokens_length + document_length + question_length + 100 >= MAX_LENGTH:
         # Added buffer for truncation
         reduction_length = prompt_tokens_length + question_length + 100
-        encoded_input = tokenizer(document, max_length=2048 - reduction_length, truncation=True, return_tensors='pt')
-        truncated_document = tokenizer.decode(encoded_input['input_ids'][0][:2048 - reduction_length]) 
+        encoded_input = tokenizer(document, max_length=MAX_LENGTH - reduction_length, truncation=True, return_tensors='pt')
+        truncated_document = tokenizer.decode(encoded_input['input_ids'][0][:MAX_LENGTH - reduction_length]) 
         document = truncated_document.replace("</s>", "")
 
     prompt += "Example " + str(prompt.count("Example") + 1) +":\n"
@@ -371,19 +375,19 @@ def generate_contradictory_answer_llm_approach(document: str, question: str, pro
         prompt += "Question: " + question + "\n"
         prompt += "Incorrect Answer: " 
 
-    input_ids = tokenizer.encode(prompt, max_length=2048, truncation=True, return_tensors='pt').to(device)
+    input_ids = tokenizer.encode(prompt, max_length=MAX_LENGTH, truncation=True, return_tensors='pt').to(device)
 
     #print("New input ids")
     #print(input_ids.shape)
     #assert False
 
-    if input_ids.shape[0] != 1 or input_ids.shape[1] >= 2048:
+    if input_ids.shape[0] != 1 or input_ids.shape[1] >= MAX_LENGTH:
         print("Length of problematic input ids: " + str(input_ids.shape))
         print("Length of problematic document: " + str(len(encoded_input['input_ids'][0])))
         assert False
     outputs = model.generate(
         input_ids=input_ids,
-        max_length=256,
+        max_length=MAX_LENGTH,
         do_sample=True,
         top_p=1.0,
         num_return_sequences=1)

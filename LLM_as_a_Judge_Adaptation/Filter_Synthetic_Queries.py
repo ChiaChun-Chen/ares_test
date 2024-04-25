@@ -20,12 +20,19 @@ import pdb
 client = OpenAI()
 
 def get_embedding(text, model="text-embedding-ada-002"):
+
+    # Use local embedding model
+    from langchain_community.embeddings import HuggingFaceEmbeddings
+    model_name = "sentence-transformers/paraphrase-multilingual-mpnet-base-v2"
+    model_kwargs = {'device': 'cuda'}
+    EMBEDDING_MODEL = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
+
     text = text.replace("\n", " ")
     if len(text) > 50:
         text = (" ").join(text.split(" ")[:50])
     for _ in range(5):
         try:
-            return client.embeddings.create(input = [text], model=model).data[0].embedding
+            return EMBEDDING_MODEL.embed_query(text)
         except:
             print("Error generating embedding! Attempting again...")
             time.sleep(30)
@@ -34,7 +41,7 @@ def generate_index(dataframe):
    dataframe = dataframe.drop_duplicates(subset="document")
    tqdm.pandas(desc="Generating embeddings...", total=dataframe.shape[0])
    dataframe['embeddings'] = dataframe["document"].progress_apply(lambda x: get_embedding(x, model='text-embedding-ada-002')) # model='text-embedding-ada-002'
-   dataframe =  dataframe[dataframe['embeddings'].apply(lambda x: len(x)) == 1536]
+   dataframe =  dataframe[dataframe['embeddings'].apply(lambda x: len(x)) == 768]   # need to change length to match the actual length of the embeddings
    
    dataframe = Dataset.from_pandas(dataframe)
    dataframe.add_faiss_index(column="embeddings")
