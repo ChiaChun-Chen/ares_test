@@ -1,0 +1,81 @@
+Query	Document	Answer	Contradictory_Answer	Context_Relevance_Label	Answer_Faithfulness_Label	Answer_Relevance_Label
+Where is DCC's headquarters?	"Regional Distribution of DCC
+TAIWAN 台灣
+Dairen Chemical Corporation
+Head office
+9F, No. 301, Songkiang Road, Taipei, Taiwan.
+總公司
+大連化學工業股份有限公司
+104 臺北市松江路 301 號 9 樓
+Tel/ 電話 : 886-2-7743-1500
+Fax/ 傳真 : 886-2-2509-9619
+Email/ 電郵 : service@dcc.com.tw
+Website/ 網站 : www.dcc.com.tw
+
+CHINA 中國
+Dairen Chemical (Jiangsu) Co., Ltd
+1, Dalian Road, Yangzhou Chemical 
+Industrial Park, 211900 Yangzhou, 
+Jiangsu, China.
+大連化工（江蘇）有限公司
+江蘇省 揚州化學工業園區大連路 1 號
+Tel/ 電話 : 86-514-83268888
+Fax/ 傳真 : 86-514-83298855
+
+MALAYSIA 馬來西亞
+Dairen Chemical (M) Sdn. Bhd.
+大連化工（馬）有限公司
+Plo 18, Jalan Nibong 1, Tanjung 
+Langsat Industrial Estate 81700 
+Pasir Gudang, Johor, Malaysia.
+Tel/ 電話 : 607-2565800
+Fax/ 傳真 : 607-2565799
+
+SINGAPORE 新加坡
+CCD (Singapore) Pte. Ltd.
+長連（新加坡）化工有限公司
+29 Tembusu Avenue, Jurong Island, 
+Singapore 627535.
+Tel/ 電話 : 65-6515-5060
+Fax/ 傳真 : 65-6515-4307"	DCC's headquarters are located in Taipei City.	DCC is headquartered in Jiangsu Province.	[[Yes]]	[[Yes]]	[[Yes]]
+Which VAEP products are suitable for improving the flow of mortars?	"Self Leveling Compounds
+Product Function
+DA-1141 is highly suitable for modifying self-leveling  flooring compounds. It is thoroughly compatible with all commonly-used superplasticizers, such as casein, condensation products of melamine sulphonic acid and naphthaline sulphonic acid. 
+Addition of this redispersible powder improves adhesion, abrasion resistance, flexural strength, 
+water retention, workability and the flow properties of the compounds.
+DA-1300 can improve the workability of self-leveling flooring compounds significantly, leading to excellent leveling effect. It is possible to use DA-1300 without additional superplasticizer. 
+DA-1300 can enhance the adhesion strength, flexural strength, abrasion resistance, shrinkage 
+reduction and cracking prevention of self-leveling flooring compound. Recommended dosage of DA-1300 is 2-5%."	Dalian Chemical DA-1141 is ideal for improving the fluidity of mortars. It can also be used in self-leveling floor compounds.	Dalian Chemical DA-1300 is ideal for improving the fluidity of mortars. It can also be used in self-leveling floor compounds.	[[Yes]]	[[Yes]]	[[Yes]]
+If I want to improve the fluidity of self-leveling floor compounds, which grade of Dalian Chemical VAE Redispersible Powder (VAEP) should I choose?	"Self Leveling Compounds
+Product Function
+DA-1141 is highly suitable for modifying self-leveling  flooring compounds. It is thoroughly compatible with all commonly-used superplasticizers, such as casein, condensation products of melamine sulphonic acid and naphthaline sulphonic acid. 
+Addition of this redispersible powder improves adhesion, abrasion resistance, flexural strength, 
+water retention, workability and the flow properties of the compounds.
+DA-1300 can improve the workability of self-leveling flooring compounds significantly, leading to excellent leveling effect. It is possible to use DA-1300 without additional superplasticizer. 
+DA-1300 can enhance the adhesion strength, flexural strength, abrasion resistance, shrinkage 
+reduction and cracking prevention of self-leveling flooring compound. Recommended dosage of DA-1300 is 2-5%."	DA-1400 should be chosen, as it improves the flow of self-leveling floor compounds.	DA-1141 should be chosen, as it improves the flow of self-leveling floor compounds.	[[Yes]]	[[Yes]]	[[Yes]]
+What inorganic binders are recommended for mixing VAEP product powders with Dalian Chemical VAEP products?	"Redispersible Powders Product Guide
+Production of redispersible powder
+In spray drying process, the emulsion is first sprayed into tiny droplet. When the liquid droplet is in contact with hot air, it will be converted into ball-shaped powder due to the evaporation of water. The powder consists of polymer particle that is embedded in the protective colloid.
+The protective colloid keeps the polymer particle apart, thus preventing the particle from irreversibly fusing together during the spray drying process. The powder is then mixed with anti-caking agent to prevent caking during the storage of powder.
+Good redispersibility
+When we add redispersible powder into water, it can be reconstituted into the emulsion easily. Below is the comparison on the particle size distribution between original VAE emulsion and reconstituted emulsion.
+
+Product Characteristics / Advantages
+Typical applications of the redispersible powders
+• Tile Adhesive
+• Grout Application
+• Skim Coat
+• Rendering
+• Self Leveling Compounds
+• Exterior Insulation & Finishing System
+• Repair Mortar
+• Gypsum Based Compounds
+Advantages of adding redispersible powder in dry mix products
+• Improve trowel ability and open time
+• Enhance adhesive strength
+• Increase anti-sagging performance
+• Hydrophobic performance
+• Increase impact resistance
+• Increase abrasion resistance
+• Increase  flexibility"	DCC VAEP powders are recommended to be mixed with inorganic binders such as cement and hydrated lime.	DCC VAEP powders are recommended to be mixed with inorganic binders such as alumina and silicate.	[[Yes]]	[[Yes]]	[[Yes]]
