@@ -152,7 +152,7 @@ def generate_contradictory_answers(few_shot_prompt_filename,generate_contradicto
         few_shot_examples_for_contradictory_answers = ""
         for row in range(len(few_shot_prompt_for_contradictory_answers)):
             few_shot_examples_for_contradictory_answers += "Example " + str(row + 1) +":\n"
-            few_shot_examples_for_contradictory_answers += "Document: " + few_shot_prompt_for_contradictory_answers.iloc[row]['Document'] + "\n"
+            few_shot_examples_for_contradictory_answers += "Document: " + clean_document(few_shot_prompt_for_contradictory_answers.iloc[row]['Document']) + "\n"
             if for_fever_dataset:
                 few_shot_examples_for_contradictory_answers += "Statement: " + few_shot_prompt_for_contradictory_answers.iloc[row]['Query'] + "\n"
                 few_shot_examples_for_contradictory_answers += "Incorrect Answer: " + few_shot_prompt_for_contradictory_answers.iloc[row]['Contradictory_Answer'] + "\n\n"
@@ -176,7 +176,7 @@ def generate_few_shot_prompts(few_shot_prompt_filename,for_fever_dataset,for_wow
     answer_gen_few_shot_examples = ""
     for row in range(len(answer_gen_few_shot_prompt)):
         answer_gen_few_shot_examples += "Example " + str(row + 1) +":\n"
-        answer_gen_few_shot_examples += "Document: " + answer_gen_few_shot_prompt.iloc[row]['Document'] + "\n"
+        answer_gen_few_shot_examples += "Document: " + clean_document(answer_gen_few_shot_prompt.iloc[row]['Document']) + "\n"
         if for_fever_dataset:
             answer_gen_few_shot_examples += "Statement: " + answer_gen_few_shot_prompt.iloc[row]['Query'] + "\n"
             answer_gen_few_shot_examples += "Answer: " + answer_gen_few_shot_prompt.iloc[row]['Answer'] + "\n\n"

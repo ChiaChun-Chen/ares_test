@@ -102,7 +102,7 @@ class CustomBERTModel(nn.Module):
 
             config = AutoConfig.from_pretrained(model_choice, trust_remote_code=True)
             config.attn_config['attn_impl'] = 'triton'  # change this to use triton-based FlashAttention
-            config.max_seq_len = max_token_length
+            config.max_seq_len = 2048
 
             model_encoding = AutoModelForCausalLM.from_pretrained(
                 model_choice,
@@ -195,7 +195,7 @@ def checkpoints(classification_dataset, model_choice):
 ########################################################
 
 def load_model(model_choice):
-    max_token_length = 2048
+    max_token_length = 512
     tokenizer = AutoTokenizer.from_pretrained(model_choice, model_max_length=max_token_length)
     
     return tokenizer, max_token_length
