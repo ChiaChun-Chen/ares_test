@@ -110,7 +110,7 @@ class CustomBERTModel(nn.Module):
           
           else:
 
-            model_encoding = AutoModel.from_pretrained(model_choice)
+            model_encoding = AutoModel.from_pretrained(model_choice, max_position_embeddings=512, ignore_mismatched_sizes=True)
             embedding_size = 768
             self.encoderModel = model_encoding
 

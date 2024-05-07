@@ -36,12 +36,14 @@ import argparse
 
 from tqdm import tqdm, tqdm_pandas
 #############################################################
+MAX_TOKEN_LENGTH = 512
+#############################################################
 
 def combine_query_document(query: str, document: str, answer=None):
     cleaned_document = re.sub(r'\n+', '\n', document.replace("\r"," ").replace("\t"," ")).strip()
     cleaned_document = cleaned_document.replace("=", " ").replace("-", " ")
     cleaned_document = re.sub(r'\s+', ' ', cleaned_document).strip()
-    cleaned_document = (" ").join(cleaned_document.split(" ")[:512])
+    cleaned_document = (" ").join(cleaned_document.split(" ")[:MAX_TOKEN_LENGTH])
 
     if len(query.split(" ")) > 100:
         query = (" ").join(query.split(" ")[:30])
@@ -66,7 +68,7 @@ def format_text_for_fine_tuning_content_relevance_sequence_classification(questi
     cleaned_document = re.sub(r'\n+', '\n', document.replace("\r"," ").replace("\t"," ")).strip()
     cleaned_document = cleaned_document.replace("=", " ").replace("-", " ")
     cleaned_document = re.sub(r'\s+', ' ', cleaned_document).strip()
-    cleaned_document = (" ").join(cleaned_document.split(" ")[:512])
+    cleaned_document = (" ").join(cleaned_document.split(" ")[:MAX_TOKEN_LENGTH])
 
     instruction += "### Instruction:\n"
     instruction += "Question: " + question + "\n"
@@ -143,7 +145,7 @@ class CustomBERTModel(nn.Module):
           
           else:
 
-            model_encoding = AutoModel.from_pretrained(model_choice)
+            model_encoding = AutoModel.from_pretrained(model_choice, max_position_embeddings=MAX_TOKEN_LENGTH, ignore_mismatched_sizes=True)
             embedding_size = 768
             self.encoderModel = model_encoding
 
@@ -195,7 +197,7 @@ def checkpoints(classification_dataset, model_choice):
 ########################################################
 
 def load_model(model_choice):
-    max_token_length = 512
+    max_token_length = MAX_TOKEN_LENGTH
     tokenizer = AutoTokenizer.from_pretrained(model_choice, model_max_length=max_token_length)
     
     return tokenizer, max_token_length
@@ -433,7 +435,7 @@ def train_and_evaluate_model(number_of_runs, tokenized_datasets, assigned_batch_
 
         ############################################################
 
-        model = CustomBERTModel(len(set(train_set_label)), model_choice)
+        model = CustomBERTModel(2, model_choice)
 
         model.to(device)
 
