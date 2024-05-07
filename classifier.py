@@ -7,15 +7,17 @@ import datasets
 from torch.utils.data import DataLoader
 import re
 from tqdm.auto import tqdm
+import os
 
 ############################################
 # Parameters for the classification script #
 
-model_choice = "google-bert/bert-base-multilingual-cased"
-checkpoint = "checkpoints/google-bert-bert-base-multilingual-cased/Context_Relevance_Label_human_validation_set_2024-04-27_11:28:24.pt"
-unlabelled_data = "CCP_example_files/test_record.tsv"
-label_column = "Context_Relevance_Label"
-PPI_file_name = "CCP_example_files/classified_for_ppi.tsv"
+# max_token_length = 512
+# model_choice = "google-bert/bert-base-multilingual-cased"
+# checkpoints = ["checkpoints/google-bert-bert-base-multilingual-cased/Answer_Faithfulness_Label_human_validation_set_2024-05-06_13:29:59.pt"]
+# unlabelled_data = "CCP_example_files/test_record.tsv"
+# label_column = ["Answer_Faithfulness_Label"]
+# PPI_file_name = "CCP_example_files/classified_for_ppi_google_bert_bert_base_multilingual_cased_AF_2024-05-05_12:42:43.tsv"
 
 ############################################
 
@@ -101,32 +103,41 @@ def classify_data(eval_dataloader, model, device):
 
     return total_prediction.cpu().numpy()
 
+def classifier(max_token_length, model_choice, checkpoints, unlabelled_data, label_column, PPI_file_name):
+    for label, checkpoint in zip(label_column, checkpoints):
+        print(f'label: {label}, checkpoint: {checkpoint}')
+        # Load the model
+        tokenizer = AutoTokenizer.from_pretrained(model_choice, model_max_length=max_token_length)
+        # tokenizer = AutoTokenizer.from_pretrained(model_choice)
+        model = CustomBERTModel(2, model_choice)
+        checkpoint_dict = torch.load(checkpoint)
+        model.load_state_dict(checkpoint_dict)
+
+        # Load the data
+        if not os.path.exists(PPI_file_name):
+            eval_set = transform_data(unlabelled_data, label)
+        else:
+            eval_set = transform_data(PPI_file_name, label)
+        eval_dataloader = prepare_dataset_for_evaluation(eval_set, label, "concat_text", 1, tokenizer)
+
+        # Prepare device setup
+        torch.cuda.empty_cache()
+        device = torch.device("cuda:0")
+        model.to(device)
+
+        # Classify the data
+        model.eval()
+        total_prediction = classify_data(eval_dataloader, model, device)
+        print("total_prediction: ", total_prediction)
+
+        # Post-process the data
+        eval_set = postprocess_data(eval_set, label, total_prediction)
+        print(eval_set.head())
+
+        # Save the data
+        eval_set.to_csv(PPI_file_name, index=False, sep="\t")
+        print("Data saved to: " + PPI_file_name)
+
 ############################################
-# Main script #
-# Load the model
-tokenizer = AutoTokenizer.from_pretrained(model_choice)
-model = CustomBERTModel(2, model_choice)
-checkpoint_dict = torch.load(checkpoint)
-model.load_state_dict(checkpoint_dict)
-
-# Load the data
-eval_set = transform_data(unlabelled_data, label_column)
-eval_dataloader = prepare_dataset_for_evaluation(eval_set, label_column, "concat_text", 1, tokenizer)
-
-# Prepare device setup
-torch.cuda.empty_cache()
-device = torch.device("cuda:0")
-model.to(device)
-
-# Classify the data
-model.eval()
-total_prediction = classify_data(eval_dataloader, model, device)
-print("total_prediction: ", total_prediction)
-
-# Post-process the data
-eval_set = postprocess_data(eval_set, label_column, total_prediction)
-print(eval_set.head())
-
-# Save the data
-eval_set.to_csv(PPI_file_name, index=False, sep="\t")
-print("Data saved to: " + PPI_file_name)
+# Main Script
+# classifier(max_token_length, model_choice, checkpoints, unlabelled_data, label_column, PPI_file_name)
