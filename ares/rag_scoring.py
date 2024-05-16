@@ -26,12 +26,15 @@ GPT_scoring, annotated_datapoints_filepath, model_choice, llm_judge, assigned_ba
         # If no checkpoints, create dummy pairs for labels with None for checkpoint
         pairings = ((None, label) for label in labels)
 
+    import pandas as pd
+    df = pd.DataFrame()
     for checkpoint, label_column in pairings:
         LLM_judge_ratio_predictions = []
         validation_set_lengths = []
         validation_set_ratios = []
         ppi_confidence_intervals = []
         accuracy_scores = []
+        tmp_df = pd.DataFrame()
         for test_set_selection in evaluation_datasets:
 
             few_shot_examples = begin(evaluation_datasets, checkpoints, labels, GPT_scoring, few_shot_examples_filepath)
@@ -51,6 +54,15 @@ GPT_scoring, annotated_datapoints_filepath, model_choice, llm_judge, assigned_ba
             few_shot_examples, metric, prediction_column, label_column, test_set_selection, 
             LLM_judge_ratio_predictions, validation_set_lengths, validation_set_ratios, 
             ppi_confidence_intervals, accuracy_scores, results, checkpoint, llm_judge)
+
+        tmp_df["LLM_judge_ratio_predictions"] = LLM_judge_ratio_predictions
+        tmp_df["ppi_confidence_intervals"] = ppi_confidence_intervals
+        tmp_df["evaluation_set_lengths"] = validation_set_lengths
+        tmp_df["evaluation_set_ratios (RAG Performance)"] = validation_set_ratios
+        tmp_df["accuracy_scores"] = accuracy_scores
+        df = pd.concat([df, tmp_df], ignore_index=True)
+
+    return df
 
 # if not checkpoints and not llm_judge:
 #         raise ValueError("Either checkpoints or an llm_model must be provided.")

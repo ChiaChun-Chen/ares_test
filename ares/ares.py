@@ -122,7 +122,8 @@ class ARES:
         if self.ppi_config == {}: 
             print("Skipping RAG evaluation configuration due to no parameters")
         else:
-            rag_scoring_config(**self.ppi_config)
+            result_dataframe = rag_scoring_config(**self.ppi_config)
+            return result_dataframe
         
     def ues_idp(self):
         return ues_idp_config(**self.ues_idp_config)
