@@ -14,10 +14,10 @@ import os
 
 # max_token_length = 512
 # model_choice = "google-bert/bert-base-multilingual-cased"
-# checkpoints = ["checkpoints/google-bert-bert-base-multilingual-cased/Answer_Faithfulness_Label_human_validation_set_2024-05-06_13:29:59.pt"]
+# checkpoints = ["", "", ""]
 # unlabelled_data = "CCP_example_files/test_record.tsv"
-# label_column = ["Answer_Faithfulness_Label"]
-# PPI_file_name = "CCP_example_files/classified_for_ppi_google_bert_bert_base_multilingual_cased_AF_2024-05-05_12:42:43.tsv"
+# label_column = ["Context_Relevance_Label", "Answer_Relevance_Label", "Answer_Faithfulness_Label"]
+# PPI_file_name = "CCP_example_files/classified_for_ppi_google_bert_bert_base_multilingual_cased_no_checkpoint.tsv"
 
 ############################################
 
@@ -110,8 +110,9 @@ def classifier(max_token_length, model_choice, checkpoints, unlabelled_data, lab
         tokenizer = AutoTokenizer.from_pretrained(model_choice, model_max_length=max_token_length)
         # tokenizer = AutoTokenizer.from_pretrained(model_choice)
         model = CustomBERTModel(2, model_choice)
-        checkpoint_dict = torch.load(checkpoint)
-        model.load_state_dict(checkpoint_dict)
+        if checkpoint:
+            checkpoint_dict = torch.load(checkpoint)
+            model.load_state_dict(checkpoint_dict)
 
         # Load the data
         if not os.path.exists(PPI_file_name):
