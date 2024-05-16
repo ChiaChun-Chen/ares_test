@@ -316,8 +316,7 @@ def filter_dataset(rag_type: str = "question_answering"):
 def preprocess_data(test_set_selection, label_column, labels): 
     test_set = pd.read_csv(test_set_selection, sep="\t")
     text_column = 'concat_text'
-    print("test_set: \n", test_set)
-    # test_set = test_set[test_set[label_column].notna()]
+    test_set = test_set[test_set[label_column].notna()]
     # print("test_set: \n", test_set)
     if "Context" in label_column:
         test_set[text_column] = [combine_query_document(test_set.iloc[i]['Query'], test_set.iloc[i]['Document']) for i in range(len(test_set))]
